@@ -6,8 +6,12 @@ namespace FundamentosCSHARP
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
+            // La opcion --bd permite practicar SQL sin cambiar los ejercicios de POO.
+            if (args.Length > 0 && args[0] == "--bd")
+                return await EjemploBaseDeDatosAsync(args.Length > 1 ? args[1] : null);
+
             //// Tipos de datos
             //byte numeroByte = 255; // 0 a 255
             //sbyte numeroSByte = -128; // -128 a 127
@@ -83,6 +87,47 @@ namespace FundamentosCSHARP
             }
 
             EjemploPoo();
+            return 0;
+        }
+
+        static async Task<int> EjemploBaseDeDatosAsync(string? marca)
+        {
+            // La contrasena no se guarda en el codigo ni en GitHub.
+            string? conexion = Environment.GetEnvironmentVariable("FUNDAMENTOS_DB");
+            if (string.IsNullOrWhiteSpace(conexion))
+            {
+                Console.Error.WriteLine("Configura FUNDAMENTOS_DB como se explica en el README.");
+                return 1;
+            }
+
+            try
+            {
+                // El programa es propietario de la fuente y la libera al terminar.
+                await using var dataSource = Npgsql.NpgsqlDataSource.Create(conexion);
+                CervezaBD baseDeDatos = new CervezaBD(dataSource);
+                List<Cerveza> cervezas = await baseDeDatos.GetAsync(marca);
+
+                Console.WriteLine($"Cervezas encontradas: {cervezas.Count}");
+                foreach (Cerveza cerveza in cervezas)
+                    Console.WriteLine($"{cerveza.Describir()} Marca: {cerveza.Marca}.");
+                return 0;
+            }
+            catch (Npgsql.PostgresException error)
+            {
+                // El codigo SQLSTATE ayuda a diagnosticar sin mostrar credenciales.
+                Console.Error.WriteLine($"PostgreSQL rechazo la consulta (SQLSTATE {error.SqlState}). Revisa la tabla del script SQL.");
+                return 1;
+            }
+            catch (Npgsql.NpgsqlException)
+            {
+                Console.Error.WriteLine("No se pudo conectar a PostgreSQL. Revisa el servicio y FUNDAMENTOS_DB.");
+                return 1;
+            }
+            catch (ArgumentException)
+            {
+                Console.Error.WriteLine("La configuracion de conexion o los datos recibidos no son validos.");
+                return 1;
+            }
         }
 
         static void EjemploPoo()
