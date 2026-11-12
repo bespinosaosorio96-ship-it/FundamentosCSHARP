@@ -35,7 +35,7 @@ namespace FundamentosCSHARP
 
             // Creacion del objeto de la clase Bebida
             Bebida bebida = new Bebida("Coca cola", 1000);
-            // puedo asignar por que tengo atributo publico si fuese privado no podria asignar
+            // Cantidad se consulta desde fuera; Beberse controla su modificacion.
             bebida.Beberse(500);
             Console.WriteLine(bebida.Cantidad);
 
@@ -81,6 +81,69 @@ namespace FundamentosCSHARP
             {
                 Console.WriteLine("Nombre: " + cervezaActual.Nombre + " - Cantidad: " + cervezaActual.Cantidad);
             }
+
+            EjemploPoo();
+        }
+
+        static void EjemploPoo()
+        {
+            Console.WriteLine("\n=== EJEMPLO DE PROGRAMACION ORIENTADA A OBJETOS ===");
+
+            // 1. CLASES, OBJETOS Y CONSTRUCTORES: new crea objetos independientes.
+            Cerveza cerveza = new Cerveza(300, "Cerveza artesanal");
+            Vino vino = new Vino(750, "Vino tinto");
+
+            // 2. HERENCIA Y POLIMORFISMO: diferentes objetos tratados como Bebida.
+            List<Bebida> bebidas = new List<Bebida>
+            {
+                new Bebida("Agua", 1000),
+                cerveza,
+                vino
+            };
+
+            Console.WriteLine("\nHerencia y polimorfismo con virtual / override:");
+            foreach (Bebida bebida in bebidas)
+            {
+                Console.WriteLine(bebida.Describir());
+            }
+
+            // 3. INTERFACES: usamos el contrato sin depender de una clase concreta.
+            List<IBebidaAlcoholica> bebidasAlcoholicas = new List<IBebidaAlcoholica>
+            {
+                cerveza,
+                vino
+            };
+
+            Console.WriteLine("\nPolimorfismo mediante una interfaz:");
+            foreach (IBebidaAlcoholica bebidaAlcoholica in bebidasAlcoholicas)
+            {
+                Console.WriteLine(bebidaAlcoholica.DescribirAlcohol());
+            }
+
+            // 4. ENCAPSULAMIENTO: el metodo protege el estado del objeto.
+            Console.WriteLine("\nEncapsulamiento:");
+            cerveza.Beberse(100);
+            Console.WriteLine($"Despues de beber 100 ml quedan {cerveza.Cantidad} ml.");
+            // cerveza.Cantidad = -100; // No compila: el set es privado.
+
+            try
+            {
+                cerveza.Beberse(500); // Se rechaza porque solo quedan 200 ml.
+            }
+            catch (InvalidOperationException error)
+            {
+                Console.WriteLine($"Operacion rechazada: {error.Message}");
+            }
+            Console.WriteLine($"La cantidad sigue siendo {cerveza.Cantidad} ml.");
+
+            // 5. COMPOSICION DE OBJETOS: la nevera contiene las mismas bebidas.
+            Console.WriteLine("\nContenido de la nevera:");
+            Nevera nevera = new Nevera();
+            foreach (Bebida bebida in bebidas)
+            {
+                nevera.Agregar(bebida);
+            }
+            nevera.MostrarContenido();
         }
 
     }
