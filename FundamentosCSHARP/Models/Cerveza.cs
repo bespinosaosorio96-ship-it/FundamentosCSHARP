@@ -1,9 +1,15 @@
-﻿namespace FundamentosCSHARP.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace FundamentosCSHARP.Models
 {
-    internal class Cerveza : Bebida
+    class Cerveza : Bebida
     {
-        public Cerveza() : base("Cerveza", 300)
+        public Cerveza(int cantidad, string nombre = "Cerveza")
+            : base(nombre, cantidad)
         {
         }
     }
 }
+

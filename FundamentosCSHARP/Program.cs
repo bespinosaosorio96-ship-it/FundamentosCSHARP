@@ -1,12 +1,13 @@
 ﻿using System;
 using FundamentosCSHARP.Models;
 
+
 namespace FundamentosCSHARP
 {
     class Program
     {
         static void Main(string[] args)
-    {
+        {
             //// Tipos de datos
             //byte numeroByte = 255; // 0 a 255
             //sbyte numeroSByte = -128; // -128 a 127
@@ -39,10 +40,48 @@ namespace FundamentosCSHARP
             Console.WriteLine(bebida.Cantidad);
 
             //Herencia
-            Bebida cerveza = new Cerveza();
+            Bebida cerveza = new Cerveza(300);
             cerveza.Beberse(100);
             Console.WriteLine(cerveza.Cantidad);
 
+            //coleccion de datos Array
+            int[] numeros = new int[10] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+
+            // recorrer con for 
+            for (int i = 0; i < numeros.Length; i++)
+            {
+                Console.WriteLine("iteracion: " + i + " - " + numeros[i]);
+            }
+
+            //recorrer con foreach
+
+            foreach (var numero in numeros) // var numero es una variable temporal que almacena el valor de cada elemento del array numeros
+            {
+                Console.WriteLine("iteracion: " + numero);
+            }
+
+            // Listado de datos List
+            Console.WriteLine("*************************************");
+            List<int> lista = new List<int>() { 1, 2, 3, 5, 5, 6, 7, 8 };
+            lista.Add(9); // Agregar un elemento al final de la lista
+            lista.Add(10);
+            lista.Remove(2);// Eliminar un elemento de la lista
+
+            foreach (var numero in lista) // var numero es una variable temporal que almacena el valor de cada elemento del array numeros
+            {
+                Console.WriteLine("elemento: " + numero);
+            }
+            //Lista de clases
+            List<Cerveza> cervezas = new List<Cerveza>() { new Cerveza(10,"Cerveza Premium") };
+            cervezas.Add(new Cerveza(500));
+            Cerveza erdinger = new Cerveza(500, "Cerveza de trigo");
+            cervezas.Add(erdinger);
+
+            foreach (var cervezaActual in cervezas)
+            {
+                Console.WriteLine("Nombre: " + cervezaActual.Nombre + " - Cantidad: " + cervezaActual.Cantidad);
+            }
         }
+
     }
 }
